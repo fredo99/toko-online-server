@@ -1,6 +1,6 @@
 const User = require("../models/User");
-const db = require("../config/database");
 const { QueryTypes } = require("sequelize");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   getAll: async (req, res) => {
@@ -30,17 +30,19 @@ module.exports = {
       if (user.length > 0) {
         res.json({ message: "Email sudah terdaftar" });
       } else {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const result = await User.create({
           name: req.body.name,
           email: req.body.email,
-          password: req.body.password,
+          password: hashedPassword,
           role: req.body.role,
         });
       }
-      if (!result) {
+      if (result) {
+        res.json({ data: result, message: "Data berhasil ditambahkan" });
+      } else {
         res.json({ message: "Data gagal ditambahkan" });
       }
-      res.json({ data: result, message: "Data berhasil ditambahkan" });
     } catch (error) {
       res.json({ message: error.message });
     }

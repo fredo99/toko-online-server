@@ -2,9 +2,13 @@ var express = require("express");
 var router = express.Router();
 var cors = require("cors");
 var db = require("./config/database");
+const { queryParser } = require("express-query-parser");
 
 //Router
 var userRouter = require("./routes/userRoute");
+var authRouter = require("./routes/authRoute");
+var rajaongkirRouter = require("./routes/rajaongkirRoute");
+var categoryRouter = require("./routes/categoryRoute");
 
 // Init express
 const app = express();
@@ -14,6 +18,15 @@ app.use(express.json());
 app.use(cors());
 //use body-parser
 app.use(express.urlencoded({ extended: true }));
+//use query-parser
+app.use(
+  queryParser({
+    parseNull: true,
+    parseUndefined: true,
+    parseBoolean: true,
+    parseNumber: true,
+  })
+);
 
 //Testing database connection
 async () => {
@@ -29,6 +42,9 @@ async () => {
 
 //api
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/rajaongkir", rajaongkirRouter);
+app.use("/api/v1/category", categoryRouter);
 
 //listen on port
 app.listen(3000, () => {
