@@ -7,11 +7,7 @@ module.exports = {
   login: async (req, res) => {
     const { email, password } = req.body;
 
-    const check_user = await User.findOne({
-      where: {
-        email: email,
-      },
-    });
+    const check_user = await User.findOne({ where: { email: email } });
 
     if (check_user) {
       const verif_password = await bcrypt.compare(
@@ -35,23 +31,20 @@ module.exports = {
         );
         res.status(200).json({
           data: token,
+          error: false,
           message: "Login berhasil",
         });
       } else {
         res.status(400).json({
+          error: true,
           message: "Password Anda salah",
         });
       }
     } else {
       res.status(400).json({
+        error: true,
         message: "Email Anda Tidak Terdaftar",
       });
     }
-  },
-  logout: async (req, res) => {
-    req.session.destroy();
-    res.status(200).json({
-      message: "Logout berhasil",
-    });
   },
 };

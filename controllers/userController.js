@@ -28,7 +28,7 @@ module.exports = {
         },
       });
       if (user.length > 0) {
-        res.json({ message: "Email sudah terdaftar" });
+        res.json({ data: user, message: "Email sudah terdaftar" });
       } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const result = await User.create({
@@ -37,11 +37,14 @@ module.exports = {
           password: hashedPassword,
           role: req.body.role,
         });
-      }
-      if (result) {
-        res.json({ data: result, message: "Data berhasil ditambahkan" });
-      } else {
-        res.json({ message: "Data gagal ditambahkan" });
+        if (!result) {
+          res.json({ message: "Data gagal ditambahkan" });
+        } else {
+          res.json({
+            data: result,
+            message: "Data berhasil ditambahkan",
+          });
+        }
       }
     } catch (error) {
       res.json({ message: error.message });
