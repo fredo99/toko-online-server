@@ -47,8 +47,8 @@ app.use("/api/v1/rajaongkir", rajaongkirRouter);
 app.use("/api/v1/category", categoryRouter);
 
 //listen on port
-app.listen(5000, () => {
-  console.log("server running at http://localhost:5000");
+app.listen(8080, () => {
+  // console.log("server running at http://localhost:5000");
 });
 
 module.exports = app;
